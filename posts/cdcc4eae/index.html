@@ -1,0 +1,253 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>分布式事务 | 一亩三分地</title><meta name="author" content="Zen"><meta name="copyright" content="Zen"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="referrer" content="null"><meta name="description" content="常见面试问题整理之分布式事务">
+<meta property="og:type" content="article">
+<meta property="og:title" content="分布式事务">
+<meta property="og:url" content="https://919966.xyz/posts/cdcc4eae/index.html">
+<meta property="og:site_name" content="一亩三分地">
+<meta property="og:description" content="常见面试问题整理之分布式事务">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://919966.xyz/img/butterfly-icon.png">
+<meta property="article:published_time" content="2025-03-25T01:24:23.000Z">
+<meta property="article:modified_time" content="2025-03-25T01:24:23.000Z">
+<meta property="article:author" content="Zen">
+<meta property="article:tag" content="分布式事务">
+<meta property="article:tag" content="面试">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://919966.xyz/img/butterfly-icon.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "分布式事务",
+  "url": "https://919966.xyz/posts/cdcc4eae/",
+  "image": "https://919966.xyz/img/butterfly-icon.png",
+  "datePublished": "2025-03-25T01:24:23.000Z",
+  "dateModified": "2025-03-25T01:24:23.000Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Zen",
+      "url": "https://919966.xyz/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://919966.xyz/posts/cdcc4eae/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script async="async" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>(adsbygoogle = window.adsbygoogle || []).push({
+  google_ad_client: 'ca-pub-9637413530386675',
+  enable_page_level_ads: 'true'
+});</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '分布式事务',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">一亩三分地</span></a><a class="nav-page-title" href="/"><span class="site-name">分布式事务</span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">分布式事务</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-03-25T01:24:23.000Z" title="发表于 2025-03-25 09:24:23">2025-03-25</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-03-25T01:24:23.000Z" title="更新于 2025-03-25 09:24:23">2025-03-25</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="一、什么是分布式事务"><a href="#一、什么是分布式事务" class="headerlink" title="一、什么是分布式事务"></a>一、什么是分布式事务</h2><p>分布式事务就是指事务的参与者、支持事务的<a target="_blank" rel="noopener" href="https://cloud.tencent.com/product/cvm/?from_column=20065&from=20065">服务器</a>、资源服务器以及事务管理器分别位于不同的分布式系统的不同节点之上。简单的说，就是一次大的操作由不同的小操作组成，这些小的操作分布在不同的服务器上，且属于不同的应用，分布式事务需要保证这些小操作要么全部成功，要么全部失败。本质上来说，分布式事务就是为了保证不同<a target="_blank" rel="noopener" href="https://cloud.tencent.com/product/tencentdb-catalog?from_column=20065&from=20065">数据库</a>的数据一致性。</p>
+<h2 id="1、分布式事务的基础"><a href="#1、分布式事务的基础" class="headerlink" title="1、分布式事务的基础"></a>1、分布式事务的基础</h2><h3 id="1-1-CAP定理"><a href="#1-1-CAP定理" class="headerlink" title="1.1 CAP定理"></a>1.1 CAP定理</h3><p><img src="https://ask.qcloudimg.com/http-save/yehe-1510914/wr9fjwiwyc.jpeg" alt="img"></p>
+<p>CAP定理，又被叫作布鲁尔定理。对于设计分布式系统(不仅仅是分布式事务)的架构师来说，CAP就是你的入门理论。</p>
+<p>C (一致性):对某个指定的客户端来说，读操作能返回最新的写操作。对于数据分布在不同节点上的数据上来说，如果在某个节点更新了数据，那么在其他节点如果都能读取到这个最新的数据，那么就称为强一致，如果有某个节点没有读取到，那就是分布式不一致。</p>
+<p>A (可用性)：非故障的节点在合理的时间内返回合理的响应(不是错误和超时的响应)。可用性的两个关键一个是合理的时间，一个是合理的响应。合理的时间指的是请求不能无限被阻塞，应该在合理的时间给出返回。合理的响应指的是系统应该明确返回结果并且结果是正确的，这里的正确指的是比如应该返回50，而不是返回40。</p>
+<p>P (分区容错性):当出现网络分区后，系统能够继续工作。打个比方，这里个集群有多台机器，有台机器网络出现了问题，但是这个集群仍然可以正常工作。</p>
+<p>熟悉CAP的人都知道，三者不能共有，如果感兴趣可以搜索CAP的证明，在分布式系统中，网络无法100%可靠，分区其实是一个必然现象，如果我们选择了CA而放弃了P，那么当发生分区现象时，为了保证一致性，这个时候必须拒绝请求，但是A又不允许，所以分布式系统理论上不可能选择CA架构，只能选择CP或者AP架构。</p>
+<p>对于CP来说，放弃可用性，追求一致性和分区容错性，我们的zookeeper其实就是追求的强一致。</p>
+<p>对于AP来说，放弃一致性(这里说的一致性是强一致性)，追求分区容错性和可用性，这是很多分布式系统设计时的选择，后面的BASE也是根据AP来扩展。</p>
+<p>顺便一提，CAP理论中是忽略网络延迟，也就是当事务提交时，从节点A复制到节点B，但是在现实中这个是明显不可能的，所以总会有一定的时间是不一致。同时CAP中选择两个，比如你选择了CP，并不是叫你放弃A。因为P出现的概率实在是太小了，大部分的时间你仍然需要保证CA。就算分区出现了你也要为后来的A做准备，比如通过一些日志的手段，是其他机器回复至可用。</p>
+<h3 id="1-2-理解BASE理论"><a href="#1-2-理解BASE理论" class="headerlink" title="1.2 理解BASE理论"></a>1.2 理解BASE理论</h3><p><img src="https://ask.qcloudimg.com/http-save/yehe-1510914/uttvp74zje.jpeg" alt="img"></p>
+<p>eBay的架构师Dan Pritchett源于对大规模分布式系统的实践总结，在ACM上发表文章提出BASE理论，BASE理论是对CAP理论的延伸，核心思想是即使无法做到强一致性（Strong Consistency，CAP的一致性就是强一致性），但应用可以采用适合的方式达到最终一致性（Eventual Consitency）。</p>
+<p>BASE是指基本可用（Basically Available）、软状态（ Soft State）、最终一致性（ Eventual Consistency）。</p>
+<p>A、基本可用（Basically Available）</p>
+<p>基本可用是指分布式系统在出现故障的时候，允许损失部分可用性，即保证核心可用。</p>
+<p>如：电商大促时，为了应对访问量激增，部分用户可能会被引导到降级页面，服务层也可能只提供降级服务。这就是损失部分可用性的体现。</p>
+<p>B、软状态（ Soft State）</p>
+<p>软状态是指允许系统存在中间状态，而该中间状态不会影响系统整体可用性。<a target="_blank" rel="noopener" href="https://cloud.tencent.com/product/cos?from_column=20065&from=20065">分布式存储</a>中一般一份数据至少会有三个副本，允许不同节点间副本同步的延时就是软状态的体现。mysql replication的异步复制也是一种体现。</p>
+<p>C、最终一致性（ Eventual Consistency）</p>
+<p>最终一致性是指系统中的所有数据副本经过一定时间后，最终能够达到一致的状态。弱一致性和强一致性相反，最终一致性是弱一致性的一种特殊情况。</p>
+<p>D、ACID和BASE的区别与联系</p>
+<p>ACID是传统数据库常用的设计理念，追求强一致性模型。BASE支持的是大型分布式系统，提出通过牺牲强一致性获得高可用性。</p>
+<p>ACID和BASE代表了两种截然相反的设计哲学，在分布式系统设计的场景中，系统组件对一致性要求是不同的，因此ACID和BASE又会结合使用。</p>
+<h2 id="2、一致性模型"><a href="#2、一致性模型" class="headerlink" title="2、一致性模型"></a>2、一致性模型</h2><p>数据的一致性模型可以分成以下 三 类：</p>
+<ol>
+<li>强一致性：数据更新成功后，任意时刻所有副本中的数据都是一致的，一般采用同步的方式实现。</li>
+<li>弱一致性：数据更新成功后，系统不承诺立即可以读到最新写入的值，也不承诺具体多久之后可以读到。</li>
+<li>最终一致性：弱一致性的一种形式，数据更新成功后，系统不承诺立即可以返回最新写入的值，但是保证最终会返回上一次更新操作的值。</li>
+</ol>
+<p>分布式系统数据的强一致性、弱一致性和最终一致性可以通过Quorum NRW算法分析。</p>
+<h2 id="3、分布式事务解决方案"><a href="#3、分布式事务解决方案" class="headerlink" title="3、分布式事务解决方案"></a>3、分布式事务解决方案</h2><h3 id="3-1-两段提交（2PC）"><a href="#3-1-两段提交（2PC）" class="headerlink" title="3.1 两段提交（2PC）"></a>3.1 两段提交（2PC）</h3><p>在XA协议中分为两阶段:第一阶段：事务管理器要求每个涉及到事务的数据库预提交(precommit)此操作，并反映是否可以提交.第二阶段：事务协调器要求每个数据库提交数据，或者回滚数据。</p>
+<p>成功的处理情况:</p>
+<p><img src="https://ask.qcloudimg.com/http-save/yehe-1510914/s5cg8io1kh.jpeg" alt="img"></p>
+<p>失败处理情况:</p>
+<p><img src="https://ask.qcloudimg.com/http-save/yehe-1510914/hrkmtpidi0.jpeg" alt="img"></p>
+<p>两段提交方案的优缺点：</p>
+<p>优点：尽量保证了数据的强一致，实现成本较低，在各大主流数据库都有自己实现。</p>
+<p>缺点:</p>
+<ul>
+<li>单点问题:事务管理器在整个流程中扮演的角色很关键，如果其宕机，比如在第一阶段已经完成，在第二阶段正准备提交的时候事务管理器宕机，资源管理器就会一直阻塞，导致数据库无法使用。</li>
+<li>同步阻塞:在准备就绪之后，资源管理器中的资源一直处于阻塞，直到提交完成，释放资源。数据不一致:两阶段提交协议虽然为分布式数据强一致性所设计，但仍然存在数据不一致性的可能，比如在第二阶段中，假设协调者发出了事务commit的通知，但是因为网络问题该通知仅被一部分参与者所收到并执行了commit操作，其余的参与者则因为没有收到通知一直处于阻塞状态，这时候就产生了数据的不一致性。</li>
+</ul>
+<h3 id="3-2-补偿型-TCC"><a href="#3-2-补偿型-TCC" class="headerlink" title="3.2 补偿型(TCC)"></a>3.2 补偿型(TCC)</h3><p><img src="https://ask.qcloudimg.com/http-save/yehe-1510914/c6op6w2b08.jpeg" alt="img"></p>
+<p>TCC事务其实主要包含两个阶段：Try阶段、Confirm&#x2F;Cancel阶段。从TCC的逻辑模型上我们可以看到，TCC的核心思想是，try阶段检查并预留资源，确保在confirm阶段有资源可用，这样可以最大程度的确保confirm阶段能够执行成功。</p>
+<h3 id="3-2-1、try-尝试执行业务"><a href="#3-2-1、try-尝试执行业务" class="headerlink" title="3.2.1、try-尝试执行业务"></a>3.2.1、try-尝试执行业务</h3><ul>
+<li>完成所有业务检查(一致性)</li>
+<li>预留必须业务资源(准隔离性)</li>
+</ul>
+<h3 id="3-2-2、confirm-确认执行业务"><a href="#3-2-2、confirm-确认执行业务" class="headerlink" title="3.2.2、confirm-确认执行业务"></a>3.2.2、confirm-确认执行业务</h3><ul>
+<li>真正执行业务</li>
+<li>不作任何业务检查</li>
+<li>只使用Try阶段预留的业务资源</li>
+<li>Confirm操作必须保证幂等性</li>
+</ul>
+<h3 id="3-2-3、cancel-取消执行业务"><a href="#3-2-3、cancel-取消执行业务" class="headerlink" title="3.2.3、cancel-取消执行业务"></a>3.2.3、cancel-取消执行业务</h3><ul>
+<li>释放Try阶段预留的业务资源</li>
+<li>Cancel操作必须保证幂等性</li>
+</ul>
+<h3 id="3-3-RockectMQ消息事务"><a href="#3-3-RockectMQ消息事务" class="headerlink" title="3.3 RockectMQ消息事务"></a>3.3 RockectMQ消息事务</h3><p>当消息生产者本地事务处理成功与消息发送成功不一致时，传统的处理方式无法解决该问题，事务消息实现了消息生产者本地事务与消息发送的原子性，保证了消息生产者本地事务处理成功与消息发送成功的最终一致。用户实现类似 X&#x2F;Open XA 的分布事务功能，通过 CMQ 事务消息能达到分布式事务的最终一致。</p>
+<p><img src="https://ask.qcloudimg.com/http-save/yehe-1510914/s7gis0mc0h.jpeg" alt="img"></p>
+<p>其中，事务消息发送对应步骤1、2、3、4，事务消息回查对应步骤5、6、7。</p>
+<ol>
+<li>生产者向 MQ 服务端发送消息（为了方便说明，整个 MQ 服务端用 MQ server 来表示）。</li>
+<li>MQ Server 将消息持久化成功之后，向生产者 ACK 确认消息已经发送成功，此时消息为半消息（暂不能投递的消息）。</li>
+<li>生产者发送消息成功后，开始执行本地事务逻辑。</li>
+<li>生产者根据本地事务执行结果向 MQ Server 提交二次确认（Commit 或是 Rollback），MQ Server 收到 Commit 状态则将半消息标记为可投递，消费者最终将收到该消息；MQ Server 收到 Rollback 状态则删除半消息（直接置消息已消费状态），消费者将不会接受该消息。</li>
+<li>在断网或者是生产者应用重启的特殊情况下，上述步骤4提交的二次确认最终未到达 MQ Server，经过固定时间后 MQ Server 将对该消息发起消息回查。</li>
+<li>生产者收到消息回查后，需要检查对应消息的本地事务执行的最终结果。生产者根据检查得到的本地事务的最终状态再次提交二次确认，MQ Server 仍按照步骤4对半消息进行操作。</li>
+</ol>
+<h3 id="3-3-1、发送事务消息步骤"><a href="#3-3-1、发送事务消息步骤" class="headerlink" title="3.3.1、发送事务消息步骤"></a>3.3.1、发送事务消息步骤</h3><p>发送事务消息包含以下两个步骤：</p>
+<ol>
+<li>发送半消息并执行本地事务</li>
+<li>提交本地事务执行状态</li>
+</ol>
+<p>其中，提交本地事务执行状态有两种方式：</p>
+<ul>
+<li>执行本地事务完成后，SDK 主动提交。</li>
+<li>执行本地事务后一直没有提交状态，MQ Server 会主动发送回查，此时 SDK 提交本地事务执行状态。</li>
+</ul>
+<p>事务执行状态有以下三种情况：</p>
+<ul>
+<li>TransactionStatus.COMMIT 提交事务，消费者可以消费到该消息。</li>
+<li>TransactionStatus.ROLLBACK 回滚事务，消息被丢弃，消费者不会消费到该消息。</li>
+<li>TransactionStatus.UN_KNOW 无法判断状态，等待 MQ Server 再次发送回查。</li>
+</ul>
+<p>来源：</p>
+<p><a target="_blank" rel="noopener" href="https://www.toutiao.com/a6814688743732019725/">https://www.toutiao.com/a6814688743732019725/</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://919966.xyz">Zen</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://919966.xyz/posts/cdcc4eae/">https://919966.xyz/posts/cdcc4eae/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://919966.xyz" target="_blank">一亩三分地</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/">分布式事务</a><a class="post-meta__tags" href="/tags/%E9%9D%A2%E8%AF%95/">面试</a></div><div class="post-share"><div class="social-share" data-image="/img/butterfly-icon.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/posts/44dd5ce3/" title="mysql常见面试问题"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">mysql常见面试问题</div></div><div class="info-2"><div class="info-item-1">Mysql常见面试问题一、在MySQL中，如何定位慢查询 聚合查询 多表查询 表数据量过大查询 深度分页查询  表象：页面加载过慢、接口压测响应时间过长（超过1s） 方案一：开源工具  调试工具：Arthas 运维工具：Prometheus、Skywalking    方案二：MySQL自带慢日志 查询日志记录了所有执行时间超过指定参数（long_query_time，单位：秒，默认10秒）的所有SQL语句的日志如果要开启慢查询日志，需要在MySQL的配置文件（&#x2F;etc&#x2F;my.cnf）中配置如下信息： 代码语言：sql AI代码解释 1234# 开启MySQL慢日志查询开关slow_query_log=1# 设置慢日志的时间为2秒，SQL语句执行时间超过2秒，就会视为慢查询，记录慢查询日志long_query_time=2  配置完毕之后，通过以下指令重新启动MySQL服务器进行测试，查看慢日志文件中记录的信息...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/posts/44dd5ce3/" title="mysql常见面试问题"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-03-24</div><div class="info-item-2">mysql常见面试问题</div></div><div class="info-2"><div class="info-item-1">Mysql常见面试问题一、在MySQL中，如何定位慢查询 聚合查询 多表查询 表数据量过大查询 深度分页查询  表象：页面加载过慢、接口压测响应时间过长（超过1s） 方案一：开源工具  调试工具：Arthas 运维工具：Prometheus、Skywalking    方案二：MySQL自带慢日志 查询日志记录了所有执行时间超过指定参数（long_query_time，单位：秒，默认10秒）的所有SQL语句的日志如果要开启慢查询日志，需要在MySQL的配置文件（&#x2F;etc&#x2F;my.cnf）中配置如下信息： 代码语言：sql AI代码解释 1234# 开启MySQL慢日志查询开关slow_query_log=1# 设置慢日志的时间为2秒，SQL语句执行时间超过2秒，就会视为慢查询，记录慢查询日志long_query_time=2  配置完毕之后，通过以下指令重新启动MySQL服务器进行测试，查看慢日志文件中记录的信息...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Zen</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">5</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">11</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/zenpe"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E4%BB%80%E4%B9%88%E6%98%AF%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1"><span class="toc-number">1.</span> <span class="toc-text">一、什么是分布式事务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1%E3%80%81%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E7%9A%84%E5%9F%BA%E7%A1%80"><span class="toc-number">2.</span> <span class="toc-text">1、分布式事务的基础</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-CAP%E5%AE%9A%E7%90%86"><span class="toc-number">2.1.</span> <span class="toc-text">1.1 CAP定理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E7%90%86%E8%A7%A3BASE%E7%90%86%E8%AE%BA"><span class="toc-number">2.2.</span> <span class="toc-text">1.2 理解BASE理论</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%E3%80%81%E4%B8%80%E8%87%B4%E6%80%A7%E6%A8%A1%E5%9E%8B"><span class="toc-number">3.</span> <span class="toc-text">2、一致性模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3%E3%80%81%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-number">4.</span> <span class="toc-text">3、分布式事务解决方案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E4%B8%A4%E6%AE%B5%E6%8F%90%E4%BA%A4%EF%BC%882PC%EF%BC%89"><span class="toc-number">4.1.</span> <span class="toc-text">3.1 两段提交（2PC）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E8%A1%A5%E5%81%BF%E5%9E%8B-TCC"><span class="toc-number">4.2.</span> <span class="toc-text">3.2 补偿型(TCC)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-1%E3%80%81try-%E5%B0%9D%E8%AF%95%E6%89%A7%E8%A1%8C%E4%B8%9A%E5%8A%A1"><span class="toc-number">4.3.</span> <span class="toc-text">3.2.1、try-尝试执行业务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-2%E3%80%81confirm-%E7%A1%AE%E8%AE%A4%E6%89%A7%E8%A1%8C%E4%B8%9A%E5%8A%A1"><span class="toc-number">4.4.</span> <span class="toc-text">3.2.2、confirm-确认执行业务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-3%E3%80%81cancel-%E5%8F%96%E6%B6%88%E6%89%A7%E8%A1%8C%E4%B8%9A%E5%8A%A1"><span class="toc-number">4.5.</span> <span class="toc-text">3.2.3、cancel-取消执行业务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-RockectMQ%E6%B6%88%E6%81%AF%E4%BA%8B%E5%8A%A1"><span class="toc-number">4.6.</span> <span class="toc-text">3.3 RockectMQ消息事务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-1%E3%80%81%E5%8F%91%E9%80%81%E4%BA%8B%E5%8A%A1%E6%B6%88%E6%81%AF%E6%AD%A5%E9%AA%A4"><span class="toc-number">4.7.</span> <span class="toc-text">3.3.1、发送事务消息步骤</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/cdcc4eae/" title="分布式事务">分布式事务</a><time datetime="2025-03-25T01:24:23.000Z" title="发表于 2025-03-25 09:24:23">2025-03-25</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/44dd5ce3/" title="mysql常见面试问题">mysql常见面试问题</a><time datetime="2025-03-24T00:01:38.000Z" title="发表于 2025-03-24 08:01:38">2025-03-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/57f5db2/" title="山的那边，还是山"><img src="https://cdn.jsdelivr.net/gh/zenpe/img/images%2F2025%2F03%2F21%2Fd53993696e6d50e7e5c1c29df2c37ce8.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="山的那边，还是山"/></a><div class="content"><a class="title" href="/posts/57f5db2/" title="山的那边，还是山">山的那边，还是山</a><time datetime="2019-10-30T10:10:14.000Z" title="发表于 2019-10-30 18:10:14">2019-10-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/28df8e67/" title="腾格里沙漠三天两夜,身体上越痛苦,精神上越愉悦"><img src="https://cdn.jsdelivr.net/gh/zenpe/img/images%2F2025%2F03%2F22%2F892c41da5cc9d29dec79af1fa3ead2bd.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="腾格里沙漠三天两夜,身体上越痛苦,精神上越愉悦"/></a><div class="content"><a class="title" href="/posts/28df8e67/" title="腾格里沙漠三天两夜,身体上越痛苦,精神上越愉悦">腾格里沙漠三天两夜,身体上越痛苦,精神上越愉悦</a><time datetime="2019-05-03T07:33:29.000Z" title="发表于 2019-05-03 15:33:29">2019-05-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/882ff997/" title="日出下的故宫，别有一番风味"><img src="https://cdn.jsdelivr.net/gh/zenpe/img/images%2F2025%2F03%2F22%2Fb22accacee021417d5c6486267c0094e.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="日出下的故宫，别有一番风味"/></a><div class="content"><a class="title" href="/posts/882ff997/" title="日出下的故宫，别有一番风味">日出下的故宫，别有一番风味</a><time datetime="2019-01-05T02:44:14.000Z" title="发表于 2019-01-05 10:44:14">2019-01-05</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2025 By Zen</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.5</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
